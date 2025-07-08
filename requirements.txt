@@ -1,0 +1,32 @@
+# requirements.txt for SumTube project
+
+# Core summarisation & transcript
+
+youtube-transcript-api>=1.1.1
+yt-dlp>=2025.4.8
+
+# OpenAI API client
+
+openai==1.93.0
+python-dotenv>=1.0.0
+
+# Text processing & chunking
+
+tiktoken>=0.6.3
+
+# Terminal UI
+
+rich>=13.3.3
+
+# Local speech-to-text
+
+whispercpp>=0.1.5
+
+# Semantic embeddings & vector search
+
+sentence-transformers>=2.2.2
+faiss-cpu>=1.7.4
+
+# Numeric support
+
+numpy>=1.23.5

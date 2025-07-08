@@ -1,0 +1,19 @@
+Welcome back to TechInsights! Today, we are reviewing three popular graphics cards: 
+the VegaStorm 5600 XT, the PixelBlast 5700 XT, and the RenderMax 5800 XT.
+
+First up, the VegaStorm 5600 XT. In our 1080p gaming benchmarks, it averaged 120 FPS 
+and currently retails at $250. That gives it a price-to-performance ratio of 0.48 FPS per dollar.
+
+Next, the PixelBlast 5700 XT. It delivered 135 FPS in the same test, with an MSRP of $300, 
+resulting in about 0.45 FPS per dollar.
+
+Finally, the RenderMax 5800 XT. This card hit 140 FPS but costs $350, for a ratio of 
+0.40 FPS per dollar.
+
+In summary:
+- VegaStorm 5600 XT: 120 FPS @ $250 → 0.48 FPS/$
+- PixelBlast 5700 XT: 135 FPS @ $300 → 0.45 FPS/$
+- RenderMax 5800 XT: 140 FPS @ $350 → 0.40 FPS/$
+
+Based on pure price-to-performance, the VegaStorm 5600 XT offers the best value 
+in this comparison. Thanks for watching, and don’t forget to subscribe!
