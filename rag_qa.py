@@ -12,6 +12,7 @@ from sentence_transformers import SentenceTransformer
 # Initialize OpenAI client with API key from environment
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+
 # 1. Helper to load & chunk the transcript
 def load_chunks(txt_path: Path, chunk_size: int = 500) -> list[str]:
     """
@@ -19,16 +20,21 @@ def load_chunks(txt_path: Path, chunk_size: int = 500) -> list[str]:
     """
     text = txt_path.read_text(encoding="utf-8")
     words = text.split()
-    return [" ".join(words[i : i + chunk_size]) for i in range(0, len(words), chunk_size)]
+    return [
+        " ".join(words[i : i + chunk_size]) for i in range(0, len(words), chunk_size)
+    ]
+
 
 # 2. Generate embeddings locally
 embed_model = SentenceTransformer("all-MiniLM-L6-v2")
+
 
 def embed_chunks(chunks: list[str]) -> np.ndarray:
     """
     Encode each chunk into a 384-dimensional vector using a local SBERT model.
     """
     return embed_model.encode(chunks, show_progress_bar=True)
+
 
 # 3. Build the FAISS index
 def build_faiss_index(embeddings: np.ndarray) -> faiss.IndexFlatL2:
@@ -40,12 +46,10 @@ def build_faiss_index(embeddings: np.ndarray) -> faiss.IndexFlatL2:
     index.add(embeddings.astype(np.float32))  # type: ignore[reportCallIssue]
     return index
 
+
 # 4. Querying & answer generation
 def answer_question(
-    question: str,
-    chunks: list[str],
-    index: faiss.IndexFlatL2,
-    k: int = 5
+    question: str, chunks: list[str], index: faiss.IndexFlatL2, k: int = 5
 ) -> str:
     """
     Retrieve the most relevant chunks for `question` and ask OpenAI to answer.
@@ -62,14 +66,18 @@ def answer_question(
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "Answer based on the following video context."},
-            {"role": "user",   "content": f"Context:\n{context}\n\nQ: {question}"}
+            {
+                "role": "system",
+                "content": "Answer based on the following video context.",
+            },
+            {"role": "user", "content": f"Context:\n{context}\n\nQ: {question}"},
         ],
         temperature=0.0,
     )
     # response.choices[0].message.content is always a string
     content = response.choices[0].message.content or ""
     return content.strip()
+
 
 # 5. CLI orchestration
 if __name__ == "__main__":
@@ -81,8 +89,16 @@ if __name__ == "__main__":
     parser.add_argument("video_id", help="YouTube video ID (e.g. 'dQw4w9WgXcQ')")
     parser.add_argument("question", help="Your question about the video")
     parser.add_argument(
-        "--chunks", type=int, default=500,
-        help="Words per chunk for indexing"
+        "--chunks",
+        type=int,
+        default=500,
+        help="Words per chunk for indexing",
+    )
+    parser.add_argument(
+        "--top-k",
+        type=int,
+        default=5,
+        help="Number of relevant chunks to use when answering",
     )
     args = parser.parse_args()
 
@@ -95,5 +111,5 @@ if __name__ == "__main__":
     chunks = load_chunks(txt_file, chunk_size=args.chunks)
     embeddings = embed_chunks(chunks)
     index = build_faiss_index(embeddings)
-    answer = answer_question(args.question, chunks, index, k=args.chunks)
+    answer = answer_question(args.question, chunks, index, k=args.top_k)
     print(answer)
